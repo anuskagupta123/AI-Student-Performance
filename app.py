@@ -71,23 +71,38 @@ else:
 
         col1.metric("Total Students", df.shape[0])
         col2.metric("Features", df.shape[1])
-        col3.metric("Avg Math Score", round(df["math score"].mean(),2))
+        col3.metric("Avg Math Score", round(df["math score"].mean(), 2))
         col4.metric("Max Math Score", df["math score"].max())
 
         st.subheader("Dataset Preview")
-
         st.dataframe(df.head(10), use_container_width=True)
 
-        st.subheader("Math Score Distribution")
+        # ---------------- MODEL COMPARISON ----------------
 
-        fig = px.histogram(
-            df,
-            x="math score",
-            nbins=30,
-            title="Distribution of Math Scores"
+        st.subheader("Machine Learning Model Comparison")
+
+        results = pd.DataFrame({
+            "Model": ["Linear Regression", "Decision Tree", "Random Forest"],
+            "MSE": [30.28, 71.54, 35.82],
+            "R2 Score": [0.8706, 0.6943, 0.8469]
+        })
+
+        st.dataframe(results, use_container_width=True)
+
+        fig = px.bar(
+            results,
+            x="Model",
+            y="R2 Score",
+            title="Machine Learning Model Comparison (R² Score)"
         )
 
         st.plotly_chart(fig, use_container_width=True)
+
+        best_model = results.loc[results["R2 Score"].idxmax()]
+
+        st.success(
+            f"🏆 Best Model: **{best_model['Model']}** with R² Score **{best_model['R2 Score']:.2f}**"
+        )
 
     # ---------------- PREDICTION ----------------
 
@@ -129,7 +144,7 @@ else:
             fig = px.bar(
                 x=["Predicted Score"],
                 y=[prediction],
-                labels={"x":"Result","y":"Score"},
+                labels={"x": "Result", "y": "Score"},
                 title="Prediction Result"
             )
 
@@ -202,7 +217,7 @@ else:
 
         st.subheader("Subject Correlation")
 
-        corr = df[['math score','reading score','writing score']].corr()
+        corr = df[['math score', 'reading score', 'writing score']].corr()
 
         fig2, ax = plt.subplots()
 
@@ -223,23 +238,23 @@ else:
 
         **Technologies Used**
 
-        - Python
-        - Scikit-learn
-        - Streamlit
-        - SQLite
-        - Plotly
+        - Python  
+        - Scikit-learn  
+        - Streamlit  
+        - SQLite  
+        - Plotly  
 
-        **Machine Learning Models**
+        **Machine Learning Models Compared**
 
-        - Linear Regression
-        - Decision Tree
-        - Random Forest
+        - Linear Regression  
+        - Decision Tree  
+        - Random Forest  
 
         **Features**
 
-        - AI score prediction
-        - Interactive analytics dashboard
-        - User authentication
-        - Prediction history
-        - Download reports
+        - AI score prediction  
+        - Interactive analytics dashboard  
+        - User authentication  
+        - Prediction history  
+        - Download reports  
         """)
